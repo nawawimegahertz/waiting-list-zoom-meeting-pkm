@@ -9,7 +9,12 @@ async function fetchData() {
         tableData = await response.json();
         tableData = tableData.filter(item => !item.confirmed);
         tableData.sort((a, b) => new Date(a.time) - new Date(b.time));
-        renderTable();
+        
+        // Memanggil renderTable setiap detik untuk memperbarui countdown secara dinamis
+        setInterval(() => {
+            renderTable();
+        }, 1000); // Perbarui setiap 1 detik
+
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -44,22 +49,64 @@ function renderPagination() {
     pagination.innerHTML = '';
 
     const totalPages = Math.ceil(tableData.length / rowsPerPage);
-    for (let i = 1; i <= Math.min(totalPages, 10); i++) {
+
+    const buttonWidth = 80; // Perkiraan lebar satu tombol (dalam piksel)
+    const containerWidth = pagination.offsetWidth; // Lebar container pagination
+    const maxButtons = Math.floor(containerWidth / buttonWidth); // Maks jumlah tombol berdasarkan lebar
+
+    // Tentukan rentang halaman untuk ditampilkan
+    let rangeStart = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+    let rangeEnd = Math.min(totalPages, rangeStart + maxButtons - 1);
+
+    // Pastikan range tidak keluar dari batas
+    if (rangeEnd - rangeStart + 1 < maxButtons) {
+        rangeStart = Math.max(1, rangeEnd - maxButtons + 1);
+    }
+
+    // Tombol navigasi "Previous"
+    if (currentPage > 1) {
+        const prevButton = document.createElement('button');
+        prevButton.textContent = '<';
+        prevButton.classList.add('nav');
+        prevButton.onclick = () => {
+            currentPage--;
+            renderTable();
+            renderPagination();
+        };
+        pagination.appendChild(prevButton);
+    }
+
+    // Tombol halaman
+    for (let i = rangeStart; i <= rangeEnd; i++) {
         const button = document.createElement('button');
         button.textContent = i;
         button.classList.toggle('active', i === currentPage);
         button.onclick = () => {
             currentPage = i;
             renderTable();
+            renderPagination();
         };
         pagination.appendChild(button);
     }
 
-    if (totalPages > 10) {
-        const dots = document.createElement('button');
-        dots.textContent = '...';
-        dots.disabled = true;
-        pagination.appendChild(dots);
+    // Tombol navigasi "Next"
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('button');
+        nextButton.textContent = '>';
+        nextButton.classList.add('nav');
+        nextButton.onclick = () => {
+            currentPage++;
+            renderTable();
+            renderPagination();
+        };
+        pagination.appendChild(nextButton);
+    }
+
+    // Scroll horizontal jika tombol melebihi lebar container
+    if (totalPages > maxButtons) {
+        pagination.style.overflowX = 'auto';
+    } else {
+        pagination.style.overflowX = 'hidden';
     }
 }
 
@@ -168,4 +215,6 @@ function copyLink() {
     });
 }
 
-fetchData();
+setInterval(() => {
+    fetchData();
+}, 1000);

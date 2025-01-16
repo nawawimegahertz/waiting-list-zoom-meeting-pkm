@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    background-color: #eaeaff;
     margin: 0;
     padding: 0;
     display: flex;
@@ -19,9 +19,15 @@ body {
     box-sizing: border-box;
 }
 
-h1 {
-    text-align: center;
-    color: #333;
+.banner {
+    width: calc(100% - 10px);
+    max-width: 1920px;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .search-container {
@@ -112,18 +118,33 @@ th:last-child {
 
 .pagination {
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    justify-content: center; /* Pusatkan tombol pagination */
+    align-items: center; /* Rata tengah secara vertikal */
+    gap: 5px; /* Jarak antar tombol */
+    overflow-x: auto; /* Scroll horizontal jika tombol melebihi lebar */
+    max-width: 100%; /* Pagination menyesuaikan lebar container */
+    padding: 10px 0; /* Jarak dalam */
+    scrollbar-width: thin; /* Untuk mempercantik scrollbar (browser yang mendukung) */
+}
+
+.pagination::-webkit-scrollbar {
+    height: 8px; /* Tinggi scrollbar */
+}
+
+.pagination::-webkit-scrollbar-thumb {
+    background-color: #007BFF; /* Warna scrollbar */
+    border-radius: 5px;
 }
 
 .pagination button {
-    margin: 0 5px;
-    padding: 10px;
+    flex-shrink: 0; /* Pastikan tombol tidak mengecil */
+    padding: 10px 15px;
     border: none;
     background: #007BFF;
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    white-space: nowrap; /* Mencegah tombol melipat teks */
     transition: background-color 0.3s ease;
 }
 
@@ -131,8 +152,24 @@ th:last-child {
     background: #0056b3;
 }
 
-.pagination button:hover:not(.active) {
-    background: #0066cc;
+.pagination button:hover {
+    background: #0056b3;
+}
+
+/* Gaya untuk tombol navigasi (< dan >) */
+.pagination .nav {
+    background-color: #f4f4f9;
+    color: #007BFF;
+    border: 1px solid #007BFF;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination .nav:hover {
+    background-color: #007BFF;
+    color: white;
 }
 
 .popup {
