@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Tunggu Zoom</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Layanan Virtual PKM-Center UP</h1>
+
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Cari Nama">
+            <button onclick="searchData()">🔍 Cari</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nama</th>
+                    <th>Jadwal</th>
+                    <th>Countdown</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="dataBody">
+                <!-- Data akan dimuat di sini -->
+            </tbody>
+        </table>
+
+        <div class="pagination" id="pagination"></div>
+
+        <div class="footer">
+            <p>Belum mendaftar? <a href="https://forms.gle/WTN6Kw9d1wTsfPKP6" target="_blank">Daftar di sini</a>.</p>
+            <p class="footer-chip">&copy; 2025 PKM Center UP. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div class="popup" id="actionPopup">
+        <div class="popup-content">
+            <h2>Masukkan Data</h2>
+            <input type="text" id="popupName" placeholder="Masukkan Nama">
+            <input type="password" id="popupPassword" placeholder="Masukkan Kata Sandi">
+            <button id="submitPopup" class="button">Kirim</button>
+            <button onclick="closePopup('actionPopup')" class="button button-red">Tutup</button>
+        </div>
+    </div>
+
+    <div class="popup" id="zoomPopup">
+        <div class="popup-content">
+            <h2>Link Rapat Zoom</h2>
+            <p><a href="#" id="zoomLink" target="_blank">Gabung Rapat Zoom</a></p>
+            <button onclick="copyLink()" class="button">Salin Link</button>
+            <button onclick="closePopup('zoomPopup')" class="button button-red">Tutup</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
