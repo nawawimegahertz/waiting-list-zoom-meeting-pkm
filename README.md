@@ -1,6 +1,6 @@
 # ⏰ Waiting List Zoom Meeting PKM ⏰
 
-![Tutorial GIF](./assets/tutorial.gif)
+![PAGE](./assets/screenshot.png)
 
 Welcome to **Waiting List Zoom Meeting PKM**, a project designed to manage Zoom meeting waitlists efficiently. Built with simplicity and functionality in mind, this project is a perfect tool for handling participant data, countdown timers, and quick actions in a user-friendly interface.
 
