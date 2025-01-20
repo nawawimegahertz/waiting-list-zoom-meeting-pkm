@@ -119,7 +119,7 @@ Loved the project? Want to contribute or share feedback?
 
 👉 **[Visit the Repository](https://github.com/nawawimegahertz/waiting-list-zoom-meeting-pkm)**
 
-👉 **[Check Live Demo](#)** *(https://virtual-pkmcenterup.vercel.app)*
+👉 **[Check Live Demo](https://virtual-pkmcenterup.vercel.app)**
 
 💬 Feel free to reach out with your ideas or suggestions!
 
