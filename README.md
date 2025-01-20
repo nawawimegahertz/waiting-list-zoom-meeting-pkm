@@ -113,7 +113,7 @@ Easily deploy this project on **Vercel** by following these steps:
 
 ---
 
-## 📌 Call to Action
+## 📌 Keep in Touch
 
 Loved the project? Want to contribute or share feedback?
 
