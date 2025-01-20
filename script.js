@@ -173,17 +173,31 @@ function closePopup(id) {
     document.getElementById(id).classList.remove('active');
 }
 
-document.getElementById('submitPopup').addEventListener('click', () => {
-    const name = document.getElementById('popupName').value;
-    const password = document.getElementById('popupPassword').value;
-    const expectedPassword = document.getElementById('popupPassword').dataset.password;
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('submitPopup').addEventListener('click', () => {
+        const name = document.getElementById('popupName').value;
+        const password = document.getElementById('popupPassword').value;
+        const expectedPassword = document.getElementById('popupPassword').dataset.password;
 
-    if (password === expectedPassword) {
-        closePopup('actionPopup');
-        updateConfirmation(name);
-    } else {
-        alert('Invalid credentials!');
-    }
+        if (password === expectedPassword) {
+            closePopup('actionPopup');
+            const zoomPopup = document.getElementById('zoomPopup');
+            document.getElementById('zoomLink').href = 'https://us02web.zoom.us/j/1234567890'; // Ganti dengan link Zoom Anda
+            zoomPopup.classList.add('active');
+            updateConfirmation(name);
+        } else {
+            alert('Invalid credentials!');
+        }
+    });
 });
+
+function copyLink() {
+    const zoomLink = document.getElementById('zoomLink').href;
+    navigator.clipboard.writeText(zoomLink).then(() => {
+        alert('Link copied!');
+    }).catch(err => {
+        console.error('Failed to copy link:', err);
+    });
+}
 
 fetchData();
