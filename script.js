@@ -3,18 +3,17 @@ let currentPage = 1;
 const rowsPerPage = 5;
 let tableData = [];
 
+// Mengelola elemen countdown secara independen
+let intervalIds = [];
+
 async function fetchData() {
     try {
         const response = await fetch(sheetApiUrl);
         tableData = await response.json();
         tableData = tableData.filter(item => !item.confirmed);
         tableData.sort((a, b) => new Date(a.time) - new Date(b.time));
-        
-        // Memanggil renderTable setiap detik untuk memperbarui countdown secara dinamis
-        setInterval(() => {
-            renderTable();
-        }, 1000); // Perbarui setiap 1 detik
 
+        renderTable();
     } catch (error) {
         console.error('Error fetching data:', error);
     }
@@ -29,17 +28,20 @@ function renderTable() {
     const pageData = tableData.slice(start, end);
 
     pageData.forEach(item => {
-        const { countdown, class: chipClass } = calculateCountdown(item.time);
-    
         const row = document.createElement('tr');
+        const chipId = `chip-${item.name.replace(/\s+/g, '-')}`;
+
         row.innerHTML = `
             <td>${item.name}</td>
             <td>${item.time}</td>
-            <td><span class="chip ${chipClass}">${countdown}</span></td>
+            <td><span id="${chipId}" class="chip"></span></td>
             <td><button class="button" onclick="showActionPopup('${item.name}', '${item.password}')">Confirm</button></td>
         `;
         dataBody.appendChild(row);
-    });       
+
+        // Atur countdown untuk setiap chip
+        updateCountdown(chipId, item.time);
+    });
 
     renderPagination();
 }
@@ -49,21 +51,15 @@ function renderPagination() {
     pagination.innerHTML = '';
 
     const totalPages = Math.ceil(tableData.length / rowsPerPage);
+    const maxButtons = 5; // Maksimal 5 tombol halaman
 
-    const buttonWidth = 80; // Perkiraan lebar satu tombol (dalam piksel)
-    const containerWidth = pagination.offsetWidth; // Lebar container pagination
-    const maxButtons = Math.floor(containerWidth / buttonWidth); // Maks jumlah tombol berdasarkan lebar
-
-    // Tentukan rentang halaman untuk ditampilkan
     let rangeStart = Math.max(1, currentPage - Math.floor(maxButtons / 2));
     let rangeEnd = Math.min(totalPages, rangeStart + maxButtons - 1);
 
-    // Pastikan range tidak keluar dari batas
     if (rangeEnd - rangeStart + 1 < maxButtons) {
         rangeStart = Math.max(1, rangeEnd - maxButtons + 1);
     }
 
-    // Tombol navigasi "Previous"
     if (currentPage > 1) {
         const prevButton = document.createElement('button');
         prevButton.textContent = '<';
@@ -71,12 +67,10 @@ function renderPagination() {
         prevButton.onclick = () => {
             currentPage--;
             renderTable();
-            renderPagination();
         };
         pagination.appendChild(prevButton);
     }
 
-    // Tombol halaman
     for (let i = rangeStart; i <= rangeEnd; i++) {
         const button = document.createElement('button');
         button.textContent = i;
@@ -84,12 +78,10 @@ function renderPagination() {
         button.onclick = () => {
             currentPage = i;
             renderTable();
-            renderPagination();
         };
         pagination.appendChild(button);
     }
 
-    // Tombol navigasi "Next"
     if (currentPage < totalPages) {
         const nextButton = document.createElement('button');
         nextButton.textContent = '>';
@@ -97,87 +89,76 @@ function renderPagination() {
         nextButton.onclick = () => {
             currentPage++;
             renderTable();
-            renderPagination();
         };
         pagination.appendChild(nextButton);
     }
-
-    // Scroll horizontal jika tombol melebihi lebar container
-    if (totalPages > maxButtons) {
-        pagination.style.overflowX = 'auto';
-    } else {
-        pagination.style.overflowX = 'hidden';
-    }
 }
 
-function calculateCountdown(time) {
+// Contoh data waktu: `Jumat, 16.30-18.30 WIB (22 Januari)`
+
+function updateCountdown(chipId, time) {
     const [day, times, date] = time.split(/,|\(|\)/).map(e => e.trim());
     const [startTime] = times.split('-');
     const [hour, minute] = startTime.split('.').map(Number);
 
-    const eventTime = new Date();
-    eventTime.setHours(hour, minute, 0, 0);
-    eventTime.setDate(Number(date.split(' ')[0]));
-    eventTime.setMonth(new Date().getMonth());
+    const eventDate = new Date();
+    eventDate.setHours(hour, minute, 0, 0);
+    eventDate.setDate(Number(date.split(' ')[0]));
+    eventDate.setMonth(new Date().getMonth());
 
-    const now = new Date();
-    const diff = eventTime - now;
+    const updateChip = () => {
+        const now = new Date();
+        const diff = eventDate - now;
 
-    if (diff <= 0) return { countdown: 'Dimulai', class: 'black' };
+        const chip = document.getElementById(chipId);
+        if (!chip) return;
 
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        if (diff <= 0) {
+            chip.textContent = 'Dimulai';
+            chip.className = 'chip black';
+            clearInterval(intervalIds[chipId]);
+        } else {
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    let chipClass;
-    if (hours <= 1) {
-        chipClass = 'red';
-    } else if (hours <= 3) {
-        chipClass = 'pink';
-    } else if (hours <= 6) {
-        chipClass = 'yellow';
-    } else if (hours >= 9) {
-        chipClass = 'green';
-    } else {
-        chipClass = 'default';
-    }
+            let chipClass;
+            if (hours <= 1) {
+                chipClass = 'red';
+            } else if (hours <= 3) {
+                chipClass = 'pink';
+            } else if (hours <= 6) {
+                chipClass = 'yellow';
+            } else {
+                chipClass = 'green';
+            }
 
-    return {
-        countdown: `${hours}h ${minutes}m ${seconds}s`,
-        class: chipClass,
+            chip.textContent = `${hours}h ${minutes}m ${seconds}s`;
+            chip.className = `chip ${chipClass}`;
+        }
     };
+
+    if (intervalIds[chipId]) clearInterval(intervalIds[chipId]);
+    intervalIds[chipId] = setInterval(updateChip, 1000);
+    updateChip(); // Jalankan langsung pertama kali
 }
 
 function searchData() {
     const searchValue = document.getElementById('search').value.toLowerCase();
 
     if (searchValue === '') {
-        // Jika input kosong, kembalikan tabel ke data semula
-        fetchData();
+        fetchData(); // Kembalikan ke data awal jika pencarian kosong
+        currentPage = 1; // Reset ke halaman pertama
         return;
     }
 
     const filteredData = tableData.filter(item => item.name.toLowerCase().includes(searchValue));
-
     if (filteredData.length > 0) {
         tableData = filteredData;
         currentPage = 1;
         renderTable();
     } else {
         alert('Tidak ditemukan data yang sesuai!');
-    }
-}
-
-async function updateConfirmation(name) {
-    try {
-        await fetch(sheetApiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, confirmed: true })
-        });
-        fetchData();
-    } catch (error) {
-        console.error('Error updating confirmation:', error);
     }
 }
 
@@ -199,22 +180,10 @@ document.getElementById('submitPopup').addEventListener('click', () => {
 
     if (password === expectedPassword) {
         closePopup('actionPopup');
-        const zoomPopup = document.getElementById('zoomPopup');
-        document.getElementById('zoomLink').href = 'YOUR_ZOOM_LINK_HERE';
-        zoomPopup.classList.add('active');
         updateConfirmation(name);
     } else {
         alert('Invalid credentials!');
     }
 });
 
-function copyLink() {
-    const zoomLink = document.getElementById('zoomLink').href;
-    navigator.clipboard.writeText(zoomLink).then(() => {
-        alert('Link copied!');
-    });
-}
-
-setInterval(() => {
-    fetchData();
-}, 1000);
+fetchData();
