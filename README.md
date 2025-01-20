@@ -1,6 +1,6 @@
 # 🎉 Waiting List Zoom Meeting PKM
 
-![Banner](./assets/banner.png)
+![Tutorial GIF](./assets/tutorial.gif)
 
 Welcome to **Waiting List Zoom Meeting PKM**, a project designed to manage Zoom meeting waitlists efficiently. Built with simplicity and functionality in mind, this project is a perfect tool for handling participant data, countdown timers, and quick actions in a user-friendly interface.
 
@@ -8,7 +8,7 @@ Welcome to **Waiting List Zoom Meeting PKM**, a project designed to manage Zoom 
 
 ## 🚀 About Me
 
-Hi there! 👋 I'm **Nawawi Megahertz**, an **IoT Engineer** and **Frontend Enthusiast** passionate about crafting elegant, responsive, and impactful solutions for the modern web. Let's connect and build something amazing together!
+Hi there! 👋 I'm **Nawawi Megahertz**, an **IoT Engineer** and **Frontend Enthusiast** passionate about crafting elegant, responsive, and impactful solutions for the modern IoT to web. Let's connect and build something amazing together!
 
 ---
 
@@ -19,14 +19,7 @@ Hi there! 👋 I'm **Nawawi Megahertz**, an **IoT Engineer** and **Frontend Enth
 - **Pagination**: Easy navigation through long lists.
 - **Confirmation System**: Interactive popups for confirming participation.
 - **Responsive Design**: Seamless experience across devices.
-
----
-
-## 🖥️ Technologies Used
-
-- **HTML5**
-- **CSS3**
-- **JavaScript (ES6+)**
+- **Dynamic Data Fetching**: Fetches participant data, including names, schedules, and passwords, directly from a **Google Sheet** using a custom Google Apps Script backend.
 
 ---
 
@@ -34,7 +27,7 @@ Hi there! 👋 I'm **Nawawi Megahertz**, an **IoT Engineer** and **Frontend Enth
 
 Here are some code snippets showcasing the project's core functionality:
 
-### Countdown Timer
+### ⏳ Countdown Timer
 ```javascript
 function updateCountdown(chipId, time) {
     const eventDate = new Date(time);
@@ -63,7 +56,7 @@ function updateCountdown(chipId, time) {
 }
 ```
 
-### Search Functionality
+### 🔎 Search Functionality
 ```javascript
 function searchData() {
     const searchValue = document.getElementById('search').value.toLowerCase();
@@ -82,6 +75,48 @@ function searchData() {
     }
 }
 ```
+
+---
+
+## 🌐 Data Integration
+
+All participant data, including names, times, and passwords, are dynamically fetched from a **Google Sheet** using a backend powered by Google Apps Script. 
+
+### Backend Code
+The following Google Apps Script powers the backend for this project:
+
+```javascript
+function doGet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = sheet.getDataRange().getValues();
+  const totalRows = data.length - 1; // Mengurangi header
+  const result = data.slice(1).map((row) => ({
+    name: row[0],
+    password: row[1],
+    time: row[2],
+    status: row[3],
+    zoomLink: row[4]
+  }));
+  return ContentService.createTextOutput(
+    JSON.stringify({ totalRows, data: result })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
+```
+
+### Adding Backend Code to Google Sheet
+
+To add the backend code:
+
+1. Open my **Google Sheet**: [Link to Sheet](https://docs.google.com/spreadsheets/d/1eIkBJAeQ140J5NcJ_ZmMKhcjLZnZFMsD2xZf6roo_yg/edit?usp=sharing).
+2. Go to **Extensions > Apps Script**.
+3. Copy and paste the above code into your script editor.
+4. Save the script with a name like `doGet API`.
+5. Deploy the script as a **Web App**:
+   - Click on **Deploy > New Deployment**.
+   - Select **Web App**.
+   - Set **Execute as** to `Me` and **Who has access** to `Anyone`.
+   - Click **Deploy** and copy the deployment URL.
+6. Replace the `sheetApiUrl` in your project with the deployment URL.
 
 ---
 
@@ -113,19 +148,19 @@ Easily deploy this project on **Vercel** by following these steps:
 
 ---
 
-## 📌 Keep in Touch
+## 🤯 Keep in Update
 
 Loved the project? Want to contribute or share feedback?
 
 👉 **[Visit the Repository](https://github.com/nawawimegahertz/waiting-list-zoom-meeting-pkm)**
 
-👉 **[Check Live Demo](https://virtual-pkmcenterup.vercel.app)**
+👉 **[Check Live Demo](https://virtual-pkmcenterup.vercel.app/)**
 
 💬 Feel free to reach out with your ideas or suggestions!
 
 ---
 
-## 📄 License
+## 🪪 License
 
 This project is licensed under the [MIT License](./LICENSE).
 
