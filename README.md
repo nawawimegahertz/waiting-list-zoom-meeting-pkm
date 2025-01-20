@@ -82,7 +82,7 @@ function searchData() {
 
 All participant data, including names, times, and passwords, are dynamically fetched from a **Google Sheet** using a backend powered by Google Apps Script. 
 
-### Backend Code
+### ✅ Backend Code
 The following Google Apps Script powers the backend for this project:
 
 ```javascript
@@ -103,7 +103,7 @@ function doGet() {
 }
 ```
 
-### Adding Backend Code to Google Sheet
+### ✅ Adding Backend Code to Google Sheet
 
 To add the backend code:
 
