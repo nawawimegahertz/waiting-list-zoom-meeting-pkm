@@ -1,4 +1,4 @@
-# 🎉 Waiting List Zoom Meeting PKM
+# ⏰ Waiting List Zoom Meeting PKM ⏰
 
 ![Tutorial GIF](./assets/tutorial.gif)
 
