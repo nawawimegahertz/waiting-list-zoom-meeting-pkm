@@ -182,11 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (password === expectedPassword) {
             closePopup('actionPopup');
             const zoomPopup = document.getElementById('zoomPopup');
-            document.getElementById('zoomLink').href = 'https://us02web.zoom.us/j/1234567890'; // Ganti dengan link Zoom Anda
+            document.getElementById('zoomLink').href = 'Link akan menyusul + cek WA secara berkala.'; // Ganti dengan link Zoom Anda
             zoomPopup.classList.add('active');
             updateConfirmation(name);
         } else {
-            alert('Invalid credentials!');
+            alert('Nama atau password salah!');
         }
     });
 });
