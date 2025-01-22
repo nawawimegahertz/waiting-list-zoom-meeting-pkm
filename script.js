@@ -133,7 +133,7 @@ function updateCountdown(chipId, time) {
                 chipClass = 'green';
             }
 
-            chip.textContent = `${hours}h ${minutes}m ${seconds}s`;
+            chip.textContent = `${hours}j ${minutes}m ${seconds}d`;
             chip.className = `chip ${chipClass}`;
         }
     };
