@@ -89,17 +89,23 @@ The following Google Apps Script powers the backend for this project:
 function doGet() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const data = sheet.getDataRange().getValues();
-  const totalRows = data.length - 1; // Mengurangi header
-  const result = data.slice(1).map((row) => ({
+
+  // Index kolom: [0]=name, [1]=password, [2]=time, ...
+  const filteredData = data.slice(1).filter(row => {
+    // Minimal kolom name (row[0]) dan time (row[2]) diisi
+    const nameNotEmpty = row[0].toString().trim().length > 0;
+    const timeNotEmpty = row[2].toString().trim().length > 0;
+    return nameNotEmpty && timeNotEmpty;
+  });
+
+  const result = filteredData.map((row) => ({
     name: row[0],
     password: row[1],
     time: row[2],
     status: row[3],
     zoomLink: row[4]
   }));
-  return ContentService.createTextOutput(
-    JSON.stringify({ totalRows, data: result })
-  ).setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
 }
 ```
 
