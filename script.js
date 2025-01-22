@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zoomPopup.classList.add('active');
             updateConfirmation(name);
         } else {
-            alert('Nama atau password salah!');
+            alert('Password salah!');
         }
     });
 });
