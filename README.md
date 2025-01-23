@@ -113,7 +113,7 @@ function doGet() {
 
 To add the backend code:
 
-1. Open my **Google Sheet**: [Link to Sheet](#).
+1. Open your **Google Sheet**: [Link to Sheet](https://sheets.new/).
 2. Go to **Extensions > Apps Script**.
 3. Copy and paste the above code into your script editor.
 4. Save the script with a name like `doGet API`.
