@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (password === expectedPassword) {
             closePopup('actionPopup');
             const zoomPopup = document.getElementById('zoomPopup');
-            document.getElementById('zoomLink').href = 'Link akan menyusul + cek WA secara berkala.'; // Ganti dengan link Zoom Anda
+            document.getElementById('zoomLink').href = 'https://ipb-university.zoom.us/j/92869396412?pwd=o64sGbRKLTJgqL5adSPWJ21mltMbkV.1'; // Ganti dengan link Zoom Anda
             zoomPopup.classList.add('active');
             updateConfirmation(name);
         } else {
